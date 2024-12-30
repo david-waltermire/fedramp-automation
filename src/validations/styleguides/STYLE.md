@@ -26,6 +26,7 @@ This document is to instruct FedRAMP developers and community members on mandato
 | [FRR116](#frr116) | Constraints Formal Names Required | Required | Structure; Metadata |
 | [FRR117](#frr117) | Limit Informational Constraint Usage | Recommended| Structure; Metadata |
 | [FRR118](#frr118) | Keep Let Bindings Adjacent to Their Constraints | Recommended| Structure; Sorting |
+| [FRR119](#frr119) | Keep Invalid Sample Content under 100 lines | Recommended| Structure; Sorting |
 
 ### FRR101
 
@@ -1213,6 +1214,49 @@ Below are non-conformant examples.
         </constraints>
     </context>
 </metaschema-meta-constraints>
+```
+
+### FRR119
+
+ID: `frr119`
+
+Formal Name: Keep Invalid Sample Content under 100 lines
+
+State: Recommended
+
+Categories: Structure; Sorting
+
+Guidance: Developers SHOULD keep invalid sample content in non-conformant examples under 100 lines to maintain readability and clarity. When demonstrating validation failures, use the minimum amount of content necessary to illustrate the issue.
+
+[back to top](#summary)
+
+#### FRR119 Conformant Example
+
+Below is a conformant example.
+
+```xml
+<system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" uuid="11111111-2222-4000-8000-000000000000">
+    <!-- Brief example demonstrating the issue -->
+    <metadata>
+        <title>Invalid SSP Example</title>
+        <invalid-element>This demonstrates the validation failure</invalid-element>
+    </metadata>
+</system-security-plan>
+```
+
+#### FRR119 Non-conformant Example
+
+Below is a non-conformant example.
+
+```xml
+<system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" uuid="11111111-2222-4000-8000-000000000000">
+    <!-- This example has over 100 lines of content, making it harder to identify the key validation issue -->
+    <metadata>
+        <title>Overly Long Invalid SSP Example</title>
+        <last-modified>2023-04-02T16:53:42Z</last-modified>
+        <!-- ... Many more lines of unnecessary content ... -->
+    </metadata>
+</system-security-plan>
 ```
 
 [back to top](#summary)
