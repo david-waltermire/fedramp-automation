@@ -127,6 +127,7 @@ Examples:
   | inventory-item-and-component-has-public |
   | inventory-item-has-diagram-label |
   | inventory-item-has-function |
+  | inventory-item-has-is-scanned |
   | inventory-item-has-scan-type |
   | inventory-item-has-valid-mac-address |
   | inventory-item-has-vendor-name |
@@ -397,6 +398,8 @@ Examples:
   | inventory-item-has-diagram-label-PASS.yaml |
   | inventory-item-has-function-FAIL.yaml |
   | inventory-item-has-function-PASS.yaml |
+  | inventory-item-has-is-scanned-FAIL.yaml |
+  | inventory-item-has-is-scanned-PASS.yaml |
   | inventory-item-has-scan-type-FAIL.yaml |
   | inventory-item-has-scan-type-PASS.yaml |
   | inventory-item-has-valid-mac-address-FAIL.yaml |
