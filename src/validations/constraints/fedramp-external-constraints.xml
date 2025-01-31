@@ -746,6 +746,11 @@
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://automate.fedramp.gov/documentation/ssp/5-attachments/#system-inventory-approach"/>
                 <message>In a FedRAMP SSP, each inventory item MUST include the vendor name in the inventory item itself or within the linked component.</message>
             </expect>
+            <expect id="inventory-item-not-system-or-validation" target="." test="not(../component[@uuid=$component-uuid]/@type=('system','validation'))" level="ERROR">
+                <formal-name>Inventory Item Not System or Validation</formal-name>
+                <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://automate.fedramp.gov/documentation/ssp/5-attachments/#system-inventory-approach"/>
+                <message>In a FedRAMP SSP, an inventory item MUST NOT reference a "system" or "validation" component.</message>
+            </expect>
             <expect id="inventory-item-or-component-has-virtual" target="." test="count(prop[@name='virtual']) = 1 or count(../component[@uuid=$component-uuid]/prop[@name='virtual']) = 1" level="ERROR">
                 <formal-name>Inventory Item or Component Has Virtual</formal-name>
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://automate.fedramp.gov/documentation/ssp/5-attachments/#system-inventory-approach"/>

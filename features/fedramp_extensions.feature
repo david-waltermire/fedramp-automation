@@ -134,6 +134,7 @@ Examples:
   | inventory-item-has-scan-type |
   | inventory-item-has-valid-mac-address |
   | inventory-item-has-vendor-name |
+  | inventory-item-not-system-or-validation |
   | inventory-item-or-component-has-asset-id |
   | inventory-item-or-component-has-virtual |
   | inventory-item-public |
@@ -415,6 +416,8 @@ Examples:
   | inventory-item-has-valid-mac-address-PASS.yaml |
   | inventory-item-has-vendor-name-FAIL.yaml |
   | inventory-item-has-vendor-name-PASS.yaml |
+  | inventory-item-not-system-or-validation-FAIL.yaml |
+  | inventory-item-not-system-or-validation-PASS.yaml |
   | inventory-item-or-component-has-asset-id-FAIL.yaml |
   | inventory-item-or-component-has-asset-id-PASS.yaml |
   | inventory-item-public-FAIL.yaml |
