@@ -128,6 +128,7 @@ Examples:
   | interconnection-security |
   | inventory-item-allows-authenticated-scan |
   | inventory-item-and-component-has-public |
+  | inventory-item-asset-types |
   | inventory-item-has-asset-type |
   | inventory-item-has-authenticated-scan |
   | inventory-item-has-diagram-label |
@@ -406,6 +407,8 @@ Examples:
   | inventory-item-allows-authenticated-scan-PASS.yaml |
   | inventory-item-and-component-has-public-FAIL.yaml |
   | inventory-item-and-component-has-public-PASS.yaml |
+  | inventory-item-asset-types-FAIL.yaml |
+  | inventory-item-asset-types-PASS.yaml |
   | inventory-item-has-asset-type-FAIL.yaml |
   | inventory-item-has-asset-type-PASS.yaml |
   | inventory-item-has-authenticated-scan-FAIL.yaml |
