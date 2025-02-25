@@ -143,8 +143,11 @@ Examples:
   | inventory-item-has-baseline-link |
   | inventory-item-has-diagram-label |
   | inventory-item-has-function |
+  | inventory-item-has-hardware-model |
   | inventory-item-has-is-scanned |
   | inventory-item-has-scan-type |
+  | inventory-item-has-software-name |
+  | inventory-item-has-software-version |
   | inventory-item-has-valid-mac-address |
   | inventory-item-has-vendor-name |
   | inventory-item-not-system-or-validation |
@@ -454,10 +457,16 @@ Examples:
   | inventory-item-has-diagram-label-PASS.yaml |
   | inventory-item-has-function-FAIL.yaml |
   | inventory-item-has-function-PASS.yaml |
+  | inventory-item-has-hardware-model-FAIL.yaml |
+  | inventory-item-has-hardware-model-PASS.yaml |
   | inventory-item-has-is-scanned-FAIL.yaml |
   | inventory-item-has-is-scanned-PASS.yaml |
   | inventory-item-has-scan-type-FAIL.yaml |
   | inventory-item-has-scan-type-PASS.yaml |
+  | inventory-item-has-software-name-FAIL.yaml |
+  | inventory-item-has-software-name-PASS.yaml |
+  | inventory-item-has-software-version-FAIL.yaml |
+  | inventory-item-has-software-version-PASS.yaml |
   | inventory-item-has-valid-mac-address-FAIL.yaml |
   | inventory-item-has-valid-mac-address-PASS.yaml |
   | inventory-item-has-vendor-name-FAIL.yaml |
