@@ -16,7 +16,7 @@ ARG OSCAL_CLI_VERSION=2.4.0
 # and is necessary to cross-ref the Maven GPG key for checking build signatures.
 # https://keyserver.ubuntu.com/pks/lookup?search=0127D75951997E00&fingerprint=on&op=index
 ARG OSCAL_CLI_GPG_KEY=0127D75951997E00
-ARG OSCAL_JS_VERSION=2.0.6
+ARG OSCAL_JS_VERSION=2.0.7
 ARG FEDRAMP_AUTO_GIT_URL=https://github.com/GSA/fedramp-automation.git
 ARG FEDRAMP_AUTO_GIT_REF=feature/external-constraints
 ARG FEDRAMP_AUTO_GIT_COMMIT
