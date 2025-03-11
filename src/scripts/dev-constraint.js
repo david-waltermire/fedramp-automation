@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import xml2js from 'xml2js';
 import yaml from 'js-yaml';
 import {JSDOM} from "jsdom"
 import { execSync } from 'child_process';
@@ -9,60 +8,15 @@ import xmlFormatter from 'xml-formatter';
 import { fileURLToPath } from 'url';
 
 const prompt = inquirer.createPromptModule();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const constraintsDir = path.join(__dirname, '..','..','src', 'validations', 'constraints');
 const testDir = path.join(__dirname, '..','..','src', 'validations', 'constraints', 'unit-tests');
 const featureFile = path.join(__dirname,'..','..',"features", 'fedramp_extensions.feature');
-
-
 const ignoreDocument = "oscal-external-constraints.xml";
-
-async function parseXml(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    return new Promise((resolve, reject) => {
-        xml2js.parseString(fileContent, (err, result) => {
-            if (err) reject(err);
-            else resolve(result);
-        });
-    });
-}
-
-function extractConstraints(xmlObject) {
-    const constraints = [];
-
-    function searchForConstraints(obj) {
-        if (obj && typeof obj === 'object') {
-            if (Array.isArray(obj)) {
-                obj.forEach(searchForConstraints);
-            } else {
-                if (obj.constraints && Array.isArray(obj.constraints)) {
-                    obj.constraints.forEach(constraint => {
-                        Object.values(constraint).forEach(value => {
-                            if (Array.isArray(value)) {
-                                value.forEach(item => {
-                                    if (item.$ && item.$.id) {
-                                        constraints.push(item.$.id);
-                                    }
-                                });
-                            }
-                        });
-                    });
-                }
-                Object.values(obj).forEach(searchForConstraints);
-            }
-        }
-    }
-
-    searchForConstraints(xmlObject);
-    return constraints;
-}
 
 async function getAllConstraints() {
     const files = fs.readdirSync(constraintsDir).filter(file => file.endsWith('.xml') && file !== ignoreDocument);
-    let allConstraints = [];
     let allContext = {};
 
     for (const file of files) {
@@ -85,16 +39,14 @@ async function getAllConstraints() {
                 const metapathElement = contextElement.querySelector('metapath');
                 const context = metapathElement ? metapathElement.getAttribute('target') : '';
 
-                allConstraints.push(id);
                 allContext[id] = context;
-
             } else {
                 console.log(`Warning: No context found for constraint ${id}`);
             }
         });
     }
 
-    return { constraints: [...new Set(allConstraints)].sort(), allContext };
+    return { constraints: Object.keys(allContext).sort(), allContext };
 }
 
 function analyzeTestFiles() {
@@ -112,15 +64,13 @@ function analyzeTestFiles() {
                 const result = expectation.result;
 
                 if (!testResults[constraintId]) {
-                    testResults[constraintId] = { pass: null, fail: null };
+                    testResults[constraintId] = { pass_file: null, fail_file: null };
                 }
 
                 if (result === 'pass' || file.toUpperCase().includes('PASS')) {
-                    testResults[constraintId].pass = file;
-                    testResults[constraintId].pass_file = filePath.split("/").pop();                
+                    testResults[constraintId].pass_file = file;
                 } else if (result === 'fail' || file.toUpperCase().includes('FAIL')) {
-                    testResults[constraintId].fail = file;
-                    testResults[constraintId].fail_file = filePath.split("/").pop();                
+                    testResults[constraintId].fail_file = file;
                 }
             }
         }
@@ -128,8 +78,6 @@ function analyzeTestFiles() {
 
     return testResults;
 }
-
-
 
 async function scaffoldTest(constraintId,context) {
     const { confirm } = await prompt([
@@ -154,8 +102,6 @@ async function scaffoldTest(constraintId,context) {
             default: "ssp"
         }
     ]);
-
-    console.log(`Context for ${constraintId}:\n${context}`);
 
     const { useTemplate } = await prompt([
         {
@@ -187,7 +133,7 @@ async function scaffoldTest(constraintId,context) {
             }
 
             // Prepare the XPath
-            const contextParts = context.split('/').filter(part => part !== '');
+            const contextParts = context.split('/').filter(Boolean);
             let xpathExpression = '//' + contextParts[contextParts.length - 1];
 
             console.log(`Attempting to evaluate XPath: ${xpathExpression}`);
@@ -354,17 +300,13 @@ async function selectConstraints(allConstraints) {
     return selectedConstraints;
 }
 
-
-
-
-
-function getScenarioLineNumbers(featureFile, constraintId,tests) {
+function getScenarioLineNumbers(featureFile,tests) {
     const content = fs.readFileSync(featureFile, 'utf8');
     const lines = content.split('\n');
     const scenarioLines = [];
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].replace(/\|/g, '').trim();
-        if (line === tests.fail || line === tests.pass || line === tests.fail_file || line === tests.pass_file) {
+        if (line === tests.fail_file || line === tests.pass_file) {
             scenarioLines.push(i + 1); // +1 because line numbers start at 1, not 0
         }
     }
@@ -372,29 +314,6 @@ function getScenarioLineNumbers(featureFile, constraintId,tests) {
     return scenarioLines;
 }
 
-
-function parseFeatureFile(featureFilePath) {
-    const content = fs.readFileSync(featureFilePath, 'utf8');
-    const lines = content.split('\n');
-    const testCases = {};
-    let inExamples = false;
-    let lineNumber = 0;
-
-    for (const line of lines) {
-        lineNumber++;
-        if (line.trim() === 'Examples:') {
-            inExamples = true;
-        } else if (inExamples && line.trim().startsWith('|')) {
-            const match = line.match(/\|\s*(.*?)\s*\|/);
-            if (match && match[1] !== 'test_file') {
-                const yamlFile = match[1].trim();
-                testCases[yamlFile] = lineNumber;
-            }
-        }
-    }
-
-    return testCases;
-}
 async function runCucumberTest(constraintId, testFiles) {
     const passFile = testFiles.pass_file;
     const failFile = testFiles.fail_file;
@@ -407,7 +326,7 @@ async function runCucumberTest(constraintId, testFiles) {
     const nodeOptions = '--loader ts-node/esm --no-warnings --experimental-specifier-resolution=node';
     const cucumberCommand = `npx cucumber-js`;
 
-    let scenarioLines = getScenarioLineNumbers(featureFile, constraintId, testFiles);
+    let scenarioLines = getScenarioLineNumbers(featureFile, testFiles);
 
     if (scenarioLines.length === 0) {
         console.error(`No scenarios found for constraintId: ${constraintId}`);
@@ -416,7 +335,7 @@ async function runCucumberTest(constraintId, testFiles) {
             stdio: 'ignore',
             cwd: path.join(__dirname, '..', '..') 
         });     
-        scenarioLines = getScenarioLineNumbers(featureFile, constraintId, testFiles);
+        scenarioLines = getScenarioLineNumbers(featureFile, testFiles);
         if (scenarioLines.length === 0) {
             return false;
         }
@@ -438,8 +357,6 @@ async function runCucumberTest(constraintId, testFiles) {
     }
 }
 
-
-
 async function main() {
     const {constraints:allConstraints,allContext} = await getAllConstraints();
     console.log(`Found ${allConstraints.length} constraints.`);
@@ -453,17 +370,17 @@ async function main() {
         const testCoverage = testResults[constraintId];
         
         if (!testCoverage) {
-            console.log(`${constraintId}: No tests found`);
+            console.log(`No tests found for: ${constraintId}`);
             var context = allContext[constraintId]
-            console.log(`${context}: constraint context`);
+            console.log(`Context for ${constraintId}: ${context}`);
             const scaffold = await scaffoldTest(constraintId,context);
             if (scaffold) {
                 const passed = await runCucumberTest(constraintId, { pass_file: `${constraintId}-PASS.yaml`, fail_file: `${constraintId}-FAIL.yaml` });
                 console.log(`${constraintId}: Test ${passed ? 'passed' : 'failed'}`);
             }
-        } else if (!testCoverage.pass) {
+        } else if (!testCoverage.pass_file) {
             console.log(`${constraintId}: Missing positive test`);
-        } else if (!testCoverage.fail) {
+        } else if (!testCoverage.fail_file) {
             console.log(`${constraintId}: Missing negative test`);
         } else {
             console.log(`${constraintId}: Fully covered`);
