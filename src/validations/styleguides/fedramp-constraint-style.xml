@@ -25,7 +25,7 @@
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://github.com/GSA/fedramp-automation/blob/develop/src/validations/styleguides/README.md#frr102"/>
                 <message>A context element with a single metapath MUST NOT have the same target as another context with a single metapath.</message>
             </expect>
-           <expect id="frr104" target="//expect | //index-has-key" test="count(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']) eq 1 and doc-available(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']/@value)" level="ERROR">
+           <expect id="frr104" target="//expect | //index-has-key" test="count(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']) eq 1 and matches(prop[@namespace = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0' and @name = 'help-url']/@value, '^https:\/\/automate\.fedramp\.gov')" level="ERROR">
                 <formal-name>Constraints Have a Help URL Property</formal-name>
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://github.com/GSA/fedramp-automation/blob/develop/src/validations/styleguides/STYLE.md#frr104"/>
                 <message>A FedRAMP constraint MUST define a valid help URL.</message>
@@ -37,10 +37,10 @@
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://github.com/GSA/fedramp-automation/blob/develop/src/validations/styleguides/STYLE.md#frr105"/>
                 <message>A FedRAMP constraint MUST have a unique id. ID "{@id}" is used multiple times.</message>
             </expect>
-            <expect id="frr106" target="//expect | //allowed-values | //index-has-key" test="matches(@id, '^[a-z0-9-]+$')" level="ERROR">
-                <formal-name>Constraints Have IDs with Lower Case Letters, Numbers, and Dashes</formal-name>
+            <expect id="frr106" target="//expect | //allowed-values | //index-has-key" test="matches(@id, '^frr[0-9]+$')" level="ERROR">
+                <formal-name>Constraints Have IDs with Lowercase String "frr" Followed By Numbers</formal-name>
                 <prop namespace="https://docs.oasis-open.org/sarif/sarif/v2.1.0" name="help-url" value="https://github.com/GSA/fedramp-automation/blob/develop/src/validations/styleguides/STYLE.md#frr106"/>
-                <message>A FedRAMP constraint id MUST only consist of lowercase letters, numbers 0-9, or "-" characters.</message>
+                <message>A FedRAMP constraint id MUST only consist of the lowercase string "frr" followed by numbers 0-9.</message>
             </expect>
             <expect id="frr107" target="//expect | //allowed-values | //index-has-key" test="matches(@level, '(CRITICAL|ERROR|WARNING|INFORMATIONAL|DEBUG)')" level="ERROR">
                 <formal-name>Constraints Have an Explicit Severity Level</formal-name>
