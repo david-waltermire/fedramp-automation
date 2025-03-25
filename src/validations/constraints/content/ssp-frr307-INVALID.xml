@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/1.0 https://github.com/usnistgov/OSCAL/releases/download/v1.1.2/oscal_ssp_schema.xsd"
+                      uuid="12345678-1234-4321-8765-123456789012">
+  <system-implementation>
+    <component uuid="11111111-2222-4000-8000-009000600001" type="process-procedure">
+    </component>
+  </system-implementation>
+  <control-implementation>
+    <implemented-requirement control-id="ia-1" uuid="11111111-2222-4000-8000-012000030000">
+      <statement statement-id="ia-1_smt.a" uuid="11111111-2222-4000-8000-012000030100">
+        <by-component component-uuid="11111111-2222-4000-8000-009000600001" uuid="11111111-2222-4000-8000-012000030102">
+          <!-- Control origination prop is not a valid allowed value. -->
+          <prop ns="http://fedramp.gov/ns/oscal" name="control-origination" value="sp-INVALID"/>
+        </by-component>
+      </statement>
+    </implemented-requirement>
+  </control-implementation>
+</system-security-plan>
